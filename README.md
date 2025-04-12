@@ -1,4 +1,10 @@
 # 🍽️ Restaurant Reviews ETL Pipeline
+~~~
+Team PyCharmers:
+- Eva Balogun
+- Olivia Mintz
+- Nusha Bhat
+~~~
 
 A Python-based ETL system that uploads restaurant review data to S3, triggers preprocessing via AWS Lambda, and displays analytics through a Streamlit web app hosted on EC2.
 
