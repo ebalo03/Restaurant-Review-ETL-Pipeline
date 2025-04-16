@@ -68,8 +68,3 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': f"Processed and moved {key} successfully."
     }
-
-    return {
-        'statusCode': 200,
-        'body': f"Processed and moved {key} successfully."
-    }
