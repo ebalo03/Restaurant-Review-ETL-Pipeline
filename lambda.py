@@ -23,6 +23,27 @@ def lambda_handler(event, context):
     with tempfile.NamedTemporaryFile(suffix='.csv') as temp_csv:
         s3.download_file(bucket, key, temp_csv.name)
 
+    # RDS connection setup
+        conn = psycopg2.connect(
+        host='ds4300-project-rds-db.cad8e6aqaozu.us-east-1.rds.amazonaws.com',
+        database='ds4300-project-rds-db',
+        user='admin',
+        password='ds4300finalproject',
+        port=3306
+    )
+    cursor = conn.cursor()
+
+    for _, row in df.iterrows():
+        cursor.execute(
+            "INSERT INTO preprocessed_table (col1, col2) VALUES (%s, %s)",
+            (row['processed_col'], row['other_col'])
+        )
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
         # Open the file and analyze CSV content
         with open(temp_csv.name, newline='', encoding='utf-8') as csv_file:
             reader = csv.reader(csv_file)
@@ -40,6 +61,13 @@ def lambda_handler(event, context):
         s3.delete_object(Bucket=bucket, Key=key)
 
         logger.info(f"Moved file {key} from bucket {bucket} to bucket {dest_bucket}.")
+
+
+
+    return {
+        'statusCode': 200,
+        'body': f"Processed and moved {key} successfully."
+    }
 
     return {
         'statusCode': 200,
